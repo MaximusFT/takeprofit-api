@@ -51,7 +51,7 @@ Value | Type | Description
 --------| ----- | ---
 idMark | `string` | [Link to function](#function-to-get-idmark)
 email | `string` | Почта пользователя
-phone | `string \|\| array` | `string` если 1 телефон, `array` если несколько
+phone | `string || array` | `string` если 1 телефон, `array` если несколько
 name | `string` | Имя пользователя
 surname | `string` | Фамилия пользователя
 dealerId | `string` | Идентификатор Рекламодателя
