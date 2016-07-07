@@ -87,10 +87,10 @@ testTPApi Object {
 
 <dl>
   <dt>Event type</dt>
-  <dd>register</dd>
+  <dd><code>register</code></dd>
 
   <dt>Не обязательные поля</dt>
-  <dd>phone</dd>
+  <dd><code>phone</code></dd>
 </dl>
 
 Value | Type | Description
@@ -135,10 +135,10 @@ $scope.testTPApi = function() {
 
 <dl>
   <dt>Event type</dt>
-  <dd>order</dd>
+  <dd><code>order</code></dd>
 
   <dt>Не обязательные поля</dt>
-  <dd>comment</dd>
+  <dd><code>comment</code></dd>
 </dl>
 
 Value | Type | Description
@@ -189,10 +189,10 @@ $scope.testTPApi = function() {
 
 <dl>
   <dt>Event type</dt>
-  <dd>changeOrder</dd>
+  <dd><code>changeOrder</code></dd>
 
   <dt>Не обязательные поля</dt>
-  <dd>comment</dd>
+  <dd><code>comment</code></dd>
 </dl>
 
 Value | Type | Description
@@ -233,10 +233,10 @@ $scope.testTPApi = function() {
 
 <dl>
   <dt>Event type</dt>
-  <dd>event</dd>
+  <dd><code>event</code></dd>
 
   <dt>Не обязательные поля</dt>
-  <dd>comment</dd>
+  <dd><code>comment</code></dd>
 </dl>
 
 
