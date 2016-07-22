@@ -1,5 +1,7 @@
 # TakeProfit Club: API and Tracking
 
+[TOC]
+
 ## Внедрение трекинговых модулей для Рекламодателя (Владельца)
 Чтобы начать работать с партнерской программой вам необходимо произвести внедрение отслеживающего кода на всех страницах ваших ресурсов связанных с Оффером, в продвижении которого вы заинтересованы. Рекомендуется размещать код перед закрывающим `</head>`, но также код можно разместить в любой части HTML документа.
 
@@ -12,7 +14,7 @@
 Чтобы ваша аналитика была более полная и максимально информативная рекомендуем добавлять трекинг код на все ваши смежные реусрсы. Это позволит вам видеть перемещения ваших Клиентов по вашей сети сайтов.
 
 ## Внедрение трекинговых модулей для Вебмастеров (Агентов)
-Если вы хотите работать с "красивыми urls" без рефссылки, то вам необходимо пройти несколько шагов. Первый шаг — это добавление своей площадки через панель Вебмастера, а затем — верификация. Для верификации домена вам неободимо добавить на свои ресурсы скрипт и после этого подтвердить в панели Вебмастера. Рекомендуется размещать код перед закрывающим `</head>`, но также код можно разместить в любой части HTML документа.
+Если вы хотите работать с "красивыми urls" без рефссылки, то вам необходимо пройти несколько шагов. Первый шаг&nbsp;— это добавление своей площадки через панель Вебмастера, а затем — верификация. Для верификации домена вам неободимо добавить на свои ресурсы скрипт и после этого подтвердить в панели Вебмастера. Рекомендуется размещать код перед закрывающим `</head>`, но также код можно разместить в любой части HTML документа.
 
 ``` html
 <script type="text/javascript" src="https://static.acrm.io/script/metrica.min.js"></script>
@@ -25,8 +27,6 @@ XXXXXX - код вашего ресурса, этот код будет для �
 <meta name="takeprofit" content="XXXXXX"/>
 ```
 
-
-
 ## Event API
 <dl>
   <dt>Type</dt>
@@ -34,6 +34,11 @@ XXXXXX - код вашего ресурса, этот код будет для �
 
   <dt>URL</dt>
   <dd>https://acrm.io/api/takeProfit/v1/event</dd>
+
+  <dt>Поле: <code>eventName</code></dt>
+  <dd>Данное поле заполняется опционально для удобства отслеживания событий по Клиентам<br>
+Примеры: 'Регистрация', 'Registation', 'Заявка на обратный звонок', 'Лид на покупку часов'...
+  </dd>
 </dl>
 
 В зависимости от типа события нужно передавать следующие параметры:
@@ -65,17 +70,32 @@ comment | `string` | Комментарий к Событию
 
 **Example code**
 
+**Упрощенное обращение через "пиксель"**
+
+``` javascript
+tpOptions = {
+    offerId: 'XXXXXX',
+    dealerId: 'XXXXXX',
+    name: 'FirstName',
+    email: 'userMail@mail.com',
+    advertiserClientId: 'yourClientID'
+}
+tpe('register', 'Заявка на обратный звонок', tpOptions);
+```
+
+**Обращение через javascript**
+
 ``` javascript
 $scope.testTPApi = function() {
-    $http.post('/api/takeProfit/v1/event', {
+    $http.post('https://acrm.io/api/takeProfit/v1/event', {
         eventType: 'register',
-        eventName: 'Register',
+        eventName: 'Заявка на обратный звонок',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
         offerId: 'XXXXXX',
-        advertiserClientId: 'XXXXXX',
+        advertiserClientId: 'yourClientID',
         dealerId: 'XXXXXX',
         email: 'userMail@mail.com',
-        name: 'userName'
+        name: 'FirstName'
     }).success(function(response) {
         $log.info('testTPApi', response);
     }).error(function(err, status) {
@@ -83,6 +103,29 @@ $scope.testTPApi = function() {
     });
 };
 ```
+
+**Обращение через php**
+
+```php
+$tpData = array();
+$tpData['eventType'] = 'register';
+$tpData['eventName'] = 'Заявка на обратный звонок';
+$tpData['idMark'] = 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv';
+$tpData['offerId'] = 'XXXXXX';
+$tpData['advertiserClientId'] = 'yourClientID';
+$tpData['dealerId'] = 'XXXXXX';
+$tpData['email'] = 'userMail@mail.com';
+$tpData['name'] = 'FirstName';
+
+$tpc = curl_init();
+curl_setopt($tpc, CURLOPT_URL,"https://acrm.io/api/takeProfit/v1/event");
+curl_setopt($tpc, CURLOPT_POST, 1);
+curl_setopt($tpc,CURLOPT_POSTFIELDS, $tpData);
+curl_setopt($tpc, CURLOPT_RETURNTRANSFER, true);
+$tpServerOutput = curl_exec($tpc);
+curl_close ($tpc);
+```
+
 
 **Response** : none
 
@@ -117,7 +160,7 @@ offerId | `string` | Идентификатор Офера
 
 ``` javascript
 $scope.testTPApi = function() {
-    $http.post('/api/takeProfit/v1/event', {
+    $http.post('https://acrm.io/api/takeProfit/v1/event', {
         eventType: 'order',
         eventName: 'Order',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
@@ -166,7 +209,7 @@ state | `integer` | 0 = не оплачен, 1 = оплачен
 
 ``` javascript
 $scope.testTPApi = function() {
-    $http.post('/api/takeProfit/v1/event', {
+    $http.post('https://acrm.io/api/takeProfit/v1/event', {
         eventType: 'changeOrder',
         eventName: 'change',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
@@ -208,7 +251,7 @@ offerId | `string` | Идентификатор Офера
 
 ``` javascript
 $scope.testTPApi = function() {
-    $http.post('/api/takeProfit/v1/event', {
+    $http.post('https://acrm.io/api/takeProfit/v1/event', {
         eventType: 'event',
         eventName: 'event',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
