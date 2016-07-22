@@ -1,34 +1,5 @@
 # TakeProfit Club: API and Tracking
 
-function tpe(eventType, eventName, options, callback) {
-    if (options) {
-        options.eventType = eventType || options.eventType;
-        options.eventName = eventName || options.eventName;
-        options.idMark = getIdMark();
-
-        $.ajax({
-            url: apiServer + '/api/takeProfit/v1/event',
-            type: 'POST',
-            dataType: 'json',
-            data: options,
-            crossDomain: true,
-            success: function(response) {
-                if (callback) {
-                    callback(null, response);
-                }
-            },
-            error: function(err) {
-                if (callback) {
-                    callback(err);
-                }
-            }
-        });
-    } else {
-        callback(new Error('Empty options object not supported'));
-    }
-};
-window.tpe = tpe;
-
 ## Внедрение трекинговых модулей для Рекламодателя (Владельца)
 Чтобы начать работать с партнерской программой вам необходимо произвести внедрение отслеживающего кода на всех страницах ваших ресурсов связанных с Оффером, в продвижении которого вы заинтересованы. Рекомендуется размещать код перед закрывающим `</head>`, но также код можно разместить в любой части HTML документа.
 
@@ -79,7 +50,7 @@ XXXXXX - код вашего ресурса, этот код будет для �
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#Функция получения idMark)
+idMark | `string` | [Link to function](#Функция-получения-idmark)
 email | `string` | Почта пользователя
 phone | `string || array` | `string` если 1 телефон, `array` если несколько
 name | `string` | Имя пользователя
@@ -127,7 +98,7 @@ $scope.testTPApi = function() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#Функция получения idMark)
+idMark | `string` | [Link to function](#Функция-получения-idmark)
 advertiserClientId | `string` | id клиента в базе рекламодателя
 advertiserActionId | `string` | id события в базе рекламодателя
 offerService | `string` | код оффер сервиса
@@ -181,7 +152,7 @@ $scope.testTPApi = function() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#Функция получения idMark)
+idMark | `string` | [Link to function](#Функция-получения-idmark)
 advertiserClientId | `string` | id клиента в базе рекламодателя
 advertiserActionId | `string` | id события в базе рекламодателя
 eventType | `string` | `changeOrder`
@@ -226,7 +197,7 @@ $scope.testTPApi = function() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#Функция получения idMark)
+idMark | `string` | [Link to function](#Функция-получения-idmark)
 advertiserClientId | `string` | id клиента в базе рекламодателя
 eventType | `string` | `event`
 eventName | `string` | заполняется рекламодателем для отображения в статистике
@@ -283,7 +254,7 @@ function getIdMark() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#Функция получения idMark)
+idMark | `string` | [Link to function](#Функция-получения-idmark)
 dealerCode | `string` | Идентификатор рекламодателя
 
 **Example code**
