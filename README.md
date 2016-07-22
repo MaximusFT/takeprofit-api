@@ -75,9 +75,9 @@ comment | `string` | Комментарий к Событию
 tpOptions = {
     offerId: 'XXXXXX',
     dealerId: 'XXXXXX',
+    advertiserClientId: 'yourClientID',
     name: 'FirstName',
-    email: 'userMail@mail.com',
-    advertiserClientId: 'yourClientID'
+    email: 'userMail@mail.com'
 }
 tpe('register', 'Заявка на обратный звонок', tpOptions);
 ```
@@ -124,7 +124,6 @@ curl_setopt($tpc, CURLOPT_RETURNTRANSFER, true);
 $tpServerOutput = curl_exec($tpc);
 curl_close ($tpc);
 ```
-
 
 **Response** : none
 
@@ -250,6 +249,7 @@ state | `integer` | 0 = не оплачен, 1 = оплачен
 
 
 **Example code**
+
 В примере кода показывается изменение финансовой активности по Продаже, в состояние **не совершена**. Это могло произойти, к примеру, если у ваших услуг есть "Moneyback" или был возврат товара с последующим возвратом денег Клиенту.
 
 **Упрощенное обращение через "пиксель"**
@@ -434,6 +434,7 @@ $scope.testTPApi = function() {
 ```
 
 **Response**:
+
 В случае подтверждения захода с ресурса партнера на сайт рекламодателя передаются два параметра isTpVisitor = true и action - который содержит информацию откуда был совершен переход, куда и дату. В случае не подтверждения передается один параметр isTpVisitor = false
 
 **If `true`**
