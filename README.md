@@ -90,9 +90,9 @@ $scope.testTPApi = function() {
         eventType: 'register',
         eventName: 'Заявка на обратный звонок',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
+        dealerId: 'XXXXXX',
         offerId: 'XXXXXX',
         advertiserClientId: 'yourClientID',
-        dealerId: 'XXXXXX',
         email: 'userMail@mail.com',
         name: 'FirstName'
     }).success(function(response) {
@@ -110,9 +110,9 @@ $tpData = array();
 $tpData['eventType'] = 'register';
 $tpData['eventName'] = 'Заявка на обратный звонок';
 $tpData['idMark'] = 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv';
+$tpData['dealerId'] = 'XXXXXX';
 $tpData['offerId'] = 'XXXXXX';
 $tpData['advertiserClientId'] = 'yourClientID';
-$tpData['dealerId'] = 'XXXXXX';
 $tpData['email'] = 'userMail@mail.com';
 $tpData['name'] = 'FirstName';
 
@@ -129,6 +129,7 @@ curl_close ($tpc);
 **Response** : none
 
 ### Action: Финансовая активность клиента
+Данное событие нужно отправлять при совершении оплаты Посетителем (Клиентом) услуг или товаров.
 
 <dl>
   <dt>Event type</dt>
@@ -157,21 +158,40 @@ offerId | `string` | Идентификатор Офера
 
 **Example code**
 
+**Упрощенное обращение через "пиксель"**
+
+``` javascript
+tpOptions = {
+    dealerId: 'XXXXXX',
+    offerId: 'XXXXXX',
+    offerService: 'XXXXXX',
+    advertiserClientId: 'yourClientID',
+    advertiserActionId: 'yourClientActionID',
+    currency: 'uah',
+    fullCost: '1200.5',
+    state: '1',
+    tpPercent: '7.5',
+}
+tpe('order', 'Оплата заказа №123', tpOptions);
+```
+
+**Обращение через javascript**
+
 ``` javascript
 $scope.testTPApi = function() {
     $http.post('https://acrm.io/api/takeProfit/v1/event', {
         eventType: 'order',
-        eventName: 'Order',
+        eventName: 'Оплата заказа №123',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
-        offerService: 'XXXXXX',
-        currency: 'uah',
-        fullCost: '20000',
-        advertiserActionId: 'XXXXXX',
-        state: '1',
-        tpPercent: '1.5',
+        dealerId: 'XXXXXX',
         offerId: 'XXXXXX',
-        advertiserClientId: 'XXXXXX',
-        dealerId: 'XXXXXX'
+        offerService: 'XXXXXX',
+        advertiserClientId: 'yourClientID',
+        advertiserActionId: 'yourClientActionID',
+        currency: 'uah',
+        fullCost: '1200.5',
+        state: '1',
+        tpPercent: '7.5'
     }).success(function(response) {
         $log.info('testTPApi', response);
     }).error(function(err, status) {
@@ -180,9 +200,34 @@ $scope.testTPApi = function() {
 };
 ```
 
+**Обращение через php**
+
+```php
+$tpData = array();
+$tpData['dealerId'] = 'XXXXXX';
+$tpData['offerId'] = 'XXXXXX';
+$tpData['offerService'] = 'XXXXXX';
+$tpData['advertiserClientId'] = 'yourClientID';
+$tpData['advertiserActionId'] = 'yourClientActionID';
+$tpData['currency'] = 'uah';
+$tpData['fullCost'] = '1200.5';
+$tpData['state'] = '1';
+$tpData['tpPercent'] = '7.5';
+
+$tpc = curl_init();
+curl_setopt($tpc, CURLOPT_URL,"https://acrm.io/api/takeProfit/v1/event");
+curl_setopt($tpc, CURLOPT_POST, 1);
+curl_setopt($tpc,CURLOPT_POSTFIELDS, $tpData);
+curl_setopt($tpc, CURLOPT_RETURNTRANSFER, true);
+$tpServerOutput = curl_exec($tpc);
+curl_close ($tpc);
+```
+
+
 **Response** : none
 
 ### Action: Изменение состояния финансовой активности
+Данное событие нужно отправлять если проданная Услуга (Продукт) была в течении периода Hold (ужержания) возвращена и Продажа была отменена.
 
 <dl>
   <dt>Event type</dt>
@@ -205,6 +250,21 @@ state | `integer` | 0 = не оплачен, 1 = оплачен
 
 
 **Example code**
+В примере кода показывается изменение финансовой активности по Продаже, в состояние **не совершена**. Это могло произойти, к примеру, если у ваших услуг есть "Moneyback" или был возврат товара с последующим возвратом денег Клиенту.
+
+**Упрощенное обращение через "пиксель"**
+
+``` javascript
+tpOptions = {
+    offerId: 'XXXXXX',
+    advertiserClientId: 'yourClientID',
+    advertiserActionId: 'yourClientActionID',
+    state: '0',
+}
+tpe('order', 'Оплата заказа №123', tpOptions);
+```
+
+**Обращение через javascript**
 
 ``` javascript
 $scope.testTPApi = function() {
@@ -212,10 +272,10 @@ $scope.testTPApi = function() {
         eventType: 'changeOrder',
         eventName: 'change',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
-        advertiserActionId: 'XXXXXX',
-        state: '0',
         offerId: 'XXXXXX',
-        advertiserClientId: 'XXXXXX',
+        advertiserClientId: 'yourClientID',
+        advertiserActionId: 'yourClientActionID',
+        state: '0',
     }).success(function(response) {
         $log.info('testTPApi', response);
     }).error(function(err, status) {
@@ -224,13 +284,31 @@ $scope.testTPApi = function() {
 };
 ```
 
+**Обращение через php**
+
+```php
+$tpData = array();
+$tpData['offerId'] = 'XXXXXX';
+$tpData['advertiserClientId'] = 'XXXXXX';
+$tpData['advertiserActionId'] = 'XXXXXX';
+$tpData['state'] = '0';
+
+$tpc = curl_init();
+curl_setopt($tpc, CURLOPT_URL,"https://acrm.io/api/takeProfit/v1/event");
+curl_setopt($tpc, CURLOPT_POST, 1);
+curl_setopt($tpc,CURLOPT_POSTFIELDS, $tpData);
+curl_setopt($tpc, CURLOPT_RETURNTRANSFER, true);
+$tpServerOutput = curl_exec($tpc);
+curl_close ($tpc);
+```
+
 **Response** : none
 
 ### Action: Любое другое событие на усмотрение Рекламодателя
-Данное событие нужно отправлять при совершении Посетителем (Клиентом) сайта каких-либо действий, котрые можно охарактеризовать как **Action**. К примеру, это могу быть события после "Регистрации" в системе, такие как "Заполненный профиль", "Подтвержденный телефон", "Был созвон с клиентом и он подтвердил свое жение на приобритение продукта" и т.д... Эти промежуточные события, которые вы как рекламодатель можете фиксировать в партнерке для отслежвиания действий Клиентов.
+Данное событие нужно отправлять при совершении Посетителем (Клиентом) сайта каких-либо действий, котрые можно охарактеризовать как **Action**. К примеру, это могу быть события после "*Регистрации*" в системе, такие как "*Заполненный профиль*", "*Подтвержденный телефон*", "*Был созвон с клиентом и он подтвердил свое желание на приобритение продукта*" и т.д... Эти промежуточные события, которые вы как рекламодатель можете фиксировать в партнерке для отслежвиания действий Клиентов.
 
-Если ваши запланированные события имеют более сложный путь реализации, свяжитесь с нами мы поможем настроить все правильно. К примеру:
-**Регистрация** --> **Заполненный профиль** --> **Подтвержденный телефон по СМС** --> **Заявка на продукт** --> **Телефонное подтвержение на покупку** --> **Выставление счета (*но еще не оплата*)**
+Если ваши запланированные события имеют более сложный путь реализации, свяжитесь с нами мы поможем настроить все правильно.
+К примеру: **Регистрация** --> **Заполненный профиль** --> **Подтвержденный телефон по СМС** --> **Заявка на продукт** --> **Телефонное подтвержение на покупку** --> **Выставление счета (*но еще не оплата*)**
 
 В этом примере нету события финансовой активности, чтобы показать необходимость только промежуточных Событий Клиента.
 
@@ -254,11 +332,24 @@ offerId | `string` | Идентификатор Офера
 
 **Example code**
 
+**Упрощенное обращение через "пиксель"**
+
+``` javascript
+tpOptions = {
+    offerId: 'XXXXXX',
+    comment: 'Произвольный комментарий',
+    advertiserClientId: 'yourClientID'
+}
+tpe('event', 'Заполненный профиль', tpOptions);
+```
+
+**Обращение через javascript**
+
 ``` javascript
 $scope.testTPApi = function() {
     $http.post('https://acrm.io/api/takeProfit/v1/event', {
         eventType: 'event',
-        eventName: 'event',
+        eventName: 'Заполненный профиль',
         idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv',
         offerId: 'XXXXXX',
         advertiserClientId: 'XXXXXX',
@@ -269,6 +360,26 @@ $scope.testTPApi = function() {
         $log.error(err, status);
     });
 };
+```
+
+**Обращение через php**
+
+```php
+$tpData = array();
+$tpData['eventType'] = 'event';
+$tpData['eventName'] = 'Заполненный профиль';
+$tpData['idMark'] = 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv';
+$tpData['offerId'] = 'XXXXXX';
+$tpData['advertiserClientId'] = 'yourClientID';
+$tpData['comment'] = 'Произвольный комментарий';
+
+$tpc = curl_init();
+curl_setopt($tpc, CURLOPT_URL,"https://acrm.io/api/takeProfit/v1/event");
+curl_setopt($tpc, CURLOPT_POST, 1);
+curl_setopt($tpc,CURLOPT_POSTFIELDS, $tpData);
+curl_setopt($tpc, CURLOPT_RETURNTRANSFER, true);
+$tpServerOutput = curl_exec($tpc);
+curl_close ($tpc);
 ```
 
 **Response** : none
