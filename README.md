@@ -1,75 +1,59 @@
-# TakeProfit Club API
+# TakeProfit Club: API and Tracking
 
-## Function API
+function tpe(eventType, eventName, options, callback) {
+    if (options) {
+        options.eventType = eventType || options.eventType;
+        options.eventName = eventName || options.eventName;
+        options.idMark = getIdMark();
 
-### Function to get idMark
-
-``` javascript
-function getIdMark() {
-  var windowHistory = window.history.state, idMarkWindowHistory;
-  if (windowHistory) idMarkWindowHistory = window.history.state.idMark;
-  else idMarkWindowHistory = undefined;
-  return localStorage.getItem('idMark') || sessionStorage.getItem('idMark') || getCookie('idMark') || idMarkWindowHistory || undefined;
-}
-```
-
-### Проверка был ли заход с ресурса вебмастера на сайт рекламодателя
-<dl>
-  <dt>Type</dt>
-  <dd>GET</dd>
-
-  <dt>URL</dt>
-  <dd>https://acrm.io/api/takeProfit/v1/isTPVisitor</dd>
-
-  <dt>Response</dt>
-  <dd>Object</dd>
-</dl>
-
-
-Value | Type | Description
---------| ----- | ---
-idMark | `string` | [Link to function](#function-to-get-idmark)
-dealerCode | `string` | Идентификатор рекламодателя
-
-**Example code**
-
-``` javascript
-$scope.testTPApi = function() {
-    $http.get('/api/takeProfit/v1/isTPVisitor', {
-        params: {
-            dealerCode: 'XXXXXX',
-            idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv'
-        }
-    }).success(function(response) {
-        $log.info('testTPApi', response);
-    }).error(function(err, status) {
-        $log.error(err, status);
-    });
+        $.ajax({
+            url: apiServer + '/api/takeProfit/v1/event',
+            type: 'POST',
+            dataType: 'json',
+            data: options,
+            crossDomain: true,
+            success: function(response) {
+                if (callback) {
+                    callback(null, response);
+                }
+            },
+            error: function(err) {
+                if (callback) {
+                    callback(err);
+                }
+            }
+        });
+    } else {
+        callback(new Error('Empty options object not supported'));
+    }
 };
+window.tpe = tpe;
+
+## Внедрение трекинговых модулей для Рекламодателя (Владельца)
+Чтобы начать работать с партнерской программой вам необходимо произвести внедрение отслеживающего кода на всех страницах ваших ресурсов связанных с Оффером, в продвижении которого вы заинтересованы. Рекомендуется размещать код перед закрывающим `</head>`, но также код можно разместить в любой части HTML документа.
+
+``` html
+<script type="text/javascript" src="https://static.acrm.io/script/analytic.min.js"></script>
+```
+Данный код предназначен для сбора аналитики и отслеживани действий посетителей на ваших реусрсах.
+
+### Дополнительная аналитика
+Чтобы ваша аналитика была более полная и максимально информативная рекомендуем добавлять трекинг код на все ваши смежные реусрсы. Это позволит вам видеть перемещения ваших Клиентов по вашей сети сайтов.
+
+## Внедрение трекинговых модулей для Вебмастеров (Агентов)
+Если вы хотите работать с "красивыми urls" без рефссылки, то вам необходимо пройти несколько шагов. Первый шаг — это добавление своей площадки через панель Вебмастера, а затем — верификация. Для верификации домена вам неободимо добавить на свои ресурсы скрипт и после этого подтвердить в панели Вебмастера. Рекомендуется размещать код перед закрывающим `</head>`, но также код можно разместить в любой части HTML документа.
+
+``` html
+<script type="text/javascript" src="https://static.acrm.io/script/metrica.min.js"></script>
 ```
 
-**Response**:
-В случае подтверждения захода с ресурса партнера на сайт рекламодателя передаются два параметра isTpVisitor = true и action - который содержит информацию откуда был совершен переход, куда и дату. В случае не подтверждения передается один параметр isTpVisitor = false
+Для некоторых ресурсов может поднадобиться дополнительная верификация через HTML тег `<meta>`.
+XXXXXX - код вашего ресурса, этот код будет для вас сгенирирован автоматически.
 
-**If `true`**
-
-``` javascript
-testTPApi Object {
-  isTpVisitor: true,
-  dealerTrackings:
-    date: "2016-06-23T08:55:34.094Z",
-    localPage: "http://somepage.somedomen.com/?partner=XXXXXX",
-    referrerPage: "http://altsomedomen.com/"
-}
+``` html
+<meta name="takeprofit" content="XXXXXX"/>
 ```
 
-**If `false`**
-
-``` javascript
-testTPApi Object {
-  isTpVisitor: false
-};
-```
 
 
 ## Event API
@@ -95,7 +79,7 @@ testTPApi Object {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#function-to-get-idmark)
+idMark | `string` | [Link to function](#Функция получения idMark)
 email | `string` | Почта пользователя
 phone | `string || array` | `string` если 1 телефон, `array` если несколько
 name | `string` | Имя пользователя
@@ -143,7 +127,7 @@ $scope.testTPApi = function() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#function-to-get-idmark)
+idMark | `string` | [Link to function](#Функция получения idMark)
 advertiserClientId | `string` | id клиента в базе рекламодателя
 advertiserActionId | `string` | id события в базе рекламодателя
 offerService | `string` | код оффер сервиса
@@ -197,7 +181,7 @@ $scope.testTPApi = function() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#function-to-get-idmark)
+idMark | `string` | [Link to function](#Функция получения idMark)
 advertiserClientId | `string` | id клиента в базе рекламодателя
 advertiserActionId | `string` | id события в базе рекламодателя
 eventType | `string` | `changeOrder`
@@ -242,7 +226,7 @@ $scope.testTPApi = function() {
 
 Value | Type | Description
 --------| ----- | ---
-idMark | `string` | [Link to function](#function-to-get-idmark)
+idMark | `string` | [Link to function](#Функция получения idMark)
 advertiserClientId | `string` | id клиента в базе рекламодателя
 eventType | `string` | `event`
 eventName | `string` | заполняется рекламодателем для отображения в статистике
@@ -269,3 +253,75 @@ $scope.testTPApi = function() {
 ```
 
 **Response** : none
+
+
+## Function API
+
+### Функция получения idMark
+
+``` javascript
+function getIdMark() {
+  var windowHistory = window.history.state, idMarkWindowHistory;
+  if (windowHistory) idMarkWindowHistory = window.history.state.idMark;
+  else idMarkWindowHistory = undefined;
+  return localStorage.getItem('idMark') || sessionStorage.getItem('idMark') || getCookie('idMark') || idMarkWindowHistory || undefined;
+}
+```
+
+### Функция проверки был ли заход с ресурса вебмастера на сайт рекламодателя
+<dl>
+  <dt>Type</dt>
+  <dd>GET</dd>
+
+  <dt>URL</dt>
+  <dd>https://acrm.io/api/takeProfit/v1/isTPVisitor</dd>
+
+  <dt>Response</dt>
+  <dd>Object</dd>
+</dl>
+
+
+Value | Type | Description
+--------| ----- | ---
+idMark | `string` | [Link to function](#Функция получения idMark)
+dealerCode | `string` | Идентификатор рекламодателя
+
+**Example code**
+
+``` javascript
+$scope.testTPApi = function() {
+    $http.get('/api/takeProfit/v1/isTPVisitor', {
+        params: {
+            dealerCode: 'XXXXXX',
+            idMark: 'qwerty1234uiopasdfghjklzxcvbnmqazxswedcv'
+        }
+    }).success(function(response) {
+        $log.info('testTPApi', response);
+    }).error(function(err, status) {
+        $log.error(err, status);
+    });
+};
+```
+
+**Response**:
+В случае подтверждения захода с ресурса партнера на сайт рекламодателя передаются два параметра isTpVisitor = true и action - который содержит информацию откуда был совершен переход, куда и дату. В случае не подтверждения передается один параметр isTpVisitor = false
+
+**If `true`**
+
+``` javascript
+testTPApi Object {
+  isTpVisitor: true,
+  dealerTrackings:
+    date: "2016-06-23T08:55:34.094Z",
+    localPage: "http://somepage.somedomen.com/?partner=XXXXXX",
+    referrerPage: "http://altsomedomen.com/"
+}
+```
+
+**If `false`**
+
+``` javascript
+testTPApi Object {
+  isTpVisitor: false
+};
+```
