@@ -81,7 +81,8 @@ comment | `string` | Комментарий к Событию
 
 **Упрощенное обращение через "пиксель"**
 
-``` javascript
+``` html
+<script>
 tpOptions = {
     offerId: 'XXXXXX',
     dealerId: 'XXXXXX',
@@ -90,6 +91,7 @@ tpOptions = {
     email: 'userMail@mail.com'
 }
 tpe('register', 'Заявка на обратный звонок', tpOptions);
+</script>
 ```
 
 **Обращение через javascript**
@@ -169,7 +171,8 @@ offerId | `string` | Идентификатор Офера
 
 **Упрощенное обращение через "пиксель"**
 
-``` javascript
+``` html
+<script>
 tpOptions = {
     dealerId: 'XXXXXX',
     offerId: 'XXXXXX',
@@ -182,6 +185,7 @@ tpOptions = {
     tpPercent: '7.5',
 }
 tpe('order', 'Оплата заказа №123', tpOptions);
+</script>
 ```
 
 **Обращение через javascript**
@@ -264,7 +268,8 @@ state | `integer` | 0 = не оплачен, 1 = оплачен
 
 **Упрощенное обращение через "пиксель"**
 
-``` javascript
+``` html
+<script>
 tpOptions = {
     offerId: 'XXXXXX',
     advertiserClientId: 'yourClientID',
@@ -272,6 +277,7 @@ tpOptions = {
     state: '0',
 }
 tpe('order', 'Оплата заказа №123', tpOptions);
+</script>
 ```
 
 **Обращение через javascript**
@@ -344,13 +350,15 @@ offerId | `string` | Идентификатор Офера
 
 **Упрощенное обращение через "пиксель"**
 
-``` javascript
+``` html
+<script>
 tpOptions = {
     offerId: 'XXXXXX',
     comment: 'Произвольный комментарий',
     advertiserClientId: 'yourClientID'
 }
 tpe('event', 'Заполненный профиль', tpOptions);
+</script>
 ```
 
 **Обращение через javascript**
